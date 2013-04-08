@@ -6,7 +6,7 @@
 #include <string.h>
 
 char* myfgets(char *, int);
-int print_manual(int, char **);
+int print_manual(void);
 int input_number_in_range(int, int);
 
 #endif

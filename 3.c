@@ -18,17 +18,18 @@ typedef struct person {
 
 char read_argument(int, char **);
 int calculate_distance(int);
-int read_information(int *);
+hospital_t* read_information(int *);
 
 int main(int argc, char **argv) 
 {
-    int num_of_hospitals=0;
+	int num_of_hospitals=0;
+	hospital_t *hosp;
     if(read_argument(argc,argv) == 'h') {
         print_manual();
         return 0;
     }
-	read_information(&num_of_hospitals);
-    
+    hosp = read_information(&num_of_hospitals);
+
     return 0;
 }
 
@@ -46,7 +47,7 @@ int calculate_distance(int max_distance) {
 	return random_number_in_range(1, max_distance); 
 }
 
-int read_information(int *num_of_hospitals) {
+hospital_t* read_information(int *num_of_hospitals) {
 	char input_buffer[128], *endptr;
 	int i, num_of_beds[MAX_NUM_OF_HOSPITALS], num_of_empty_beds[MAX_NUM_OF_HOSPITALS];
 	FILE *fp = fopen("Input.in", "r");
@@ -67,6 +68,6 @@ int read_information(int *num_of_hospitals) {
 		hosp[i].num_of_empty_beds = num_of_empty_beds[i];
 	}
 
-	return 0;
+	return hosp;
 }
 

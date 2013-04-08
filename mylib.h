@@ -8,5 +8,6 @@
 char* myfgets(char *, int);
 int print_manual(void);
 int input_number_in_range(int, int);
+int random_number_in_range(int, int);
 
 #endif

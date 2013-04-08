@@ -39,3 +39,7 @@ int input_number_in_range(int from, int to) {
     
     return n;
 }
+
+int random_number_in_range(int from, int to) {
+    return from+(rand())%(to-from+1);
+}

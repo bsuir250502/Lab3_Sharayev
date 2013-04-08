@@ -8,7 +8,7 @@ char read_argument(int, char **);
 
 int main(int argc, char **argv) 
 {
-    if(read_argument(argc,argv)) {
+    if(read_argument(argc,argv) == "h") {
         print_manual();
         return 0;
     }

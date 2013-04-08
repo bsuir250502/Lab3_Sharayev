@@ -13,7 +13,7 @@ typedef struct person {
     char surname[16];
     hospital_t hospital;
     struct person *next;
-}
+} person_t;
 
 char read_argument(int, char **);
 int calculate_distance(int);

@@ -3,8 +3,14 @@
 #include <string.h>
 #include "mylib.h"
 
-char read_argument(int, char **);
+typedef struct {
+    int num_of_beds;
+	int num_of_empty_beds;
+	int *(distance)(int, int);
+}hospital_t;
 
+char read_argument(int, char **);
+int calculate_distance(int , int);
 
 int main(int argc, char **argv) 
 {
@@ -25,3 +31,5 @@ char read_argument(int argc, char **argv) {
 
     return '0';
 }
+
+

@@ -10,7 +10,7 @@ typedef struct {
 }hospital_t;
 
 char read_argument(int, char **);
-int calculate_distance(int , int);
+int calculate_distance(int);
 
 int main(int argc, char **argv) 
 {
@@ -32,4 +32,7 @@ char read_argument(int argc, char **argv) {
     return '0';
 }
 
+int calculate_distance(int max_distance) {
+    return random_number_in_range(1, max_distance); 
+}
 

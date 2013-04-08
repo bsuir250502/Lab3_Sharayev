@@ -3,11 +3,17 @@
 #include <string.h>
 #include "mylib.h"
 
-typedef struct {
+typedef struct hospital {
     int num_of_beds;
-	int num_of_empty_beds;
-	int *(distance)(int, int);
-}hospital_t;
+    int num_of_empty_beds;
+    int *(distance)(int, int);
+} hospital_t;
+
+typedef struct person {
+    char surname[16];
+    hospital_t hospital;
+    struct person *next;
+}
 
 char read_argument(int, char **);
 int calculate_distance(int);

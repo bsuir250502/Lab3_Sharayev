@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mylib.h"
-#define MAX_NUM_OF_HOSPITALS 20
+#define MAX_NUM_OF_HOSPITALS 12
 
 typedef struct hospital {
     int num_of_beds;
@@ -12,26 +12,49 @@ typedef struct hospital {
 
 typedef struct person {
     char surname[16];
-    hospital_t hospital;
+    int hospital;
     struct person *next;
 } person_t;
 
 char read_argument(int, char **);
 int calculate_distance(int);
 hospital_t* read_information(int *);
+person_t* fitting_persons_to_the_hospitals(hospital_t *, int);
 
 int main(int argc, char **argv) 
 {
 	int num_of_hospitals=0;
 	hospital_t *hosp;
+	person_t *person;
     if(read_argument(argc,argv) == 'h') {
         print_manual();
         return 0;
     }
     hosp = read_information(&num_of_hospitals);
-
+	person = fitting_persons_to_the_hospitals(hosp, num_of_hospitals);
+	
     return 0;
 }
+
+person_t* fitting_persons_to_the_hospitals(const hospital_t *hosp, const int num_of_hospitals) {
+	int num_of_persons, i, j, hospital_num;
+	person_t *person;
+	num_of_persons=input_number_in_range(1,100);
+	person = (person_t *)malloc(num_of_persons * sizeof(person_t));
+	for(i = 0; i < num_of_persons; i++) {
+		printf("Supply surname of the %d person:\n", i+1);
+		myfgets(person[i].surname,16);
+		for(j = 0; j < num_of_hospitals; j++) {
+			if( hosp[j].num_of_beds > hosp[j].num_of_empty_beds) {
+				hospital_num=j;
+			}
+		}
+		person[i].hospital = hospital_num;
+	}
+
+	return person;
+}
+
 
 char read_argument(int argc, char **argv) {
 	if(argc == 2) {
@@ -50,7 +73,7 @@ int calculate_distance(int max_distance) {
 hospital_t* read_information(int *num_of_hospitals) {
 	char input_buffer[128], *endptr;
 	int i, num_of_beds[MAX_NUM_OF_HOSPITALS], num_of_empty_beds[MAX_NUM_OF_HOSPITALS];
-	FILE *fp = fopen("Input.in", "r");
+	FILE *fp = fopen("D:\Input.txt", "r");
 	hospital_t *hosp;
 
 	for(i=0; (fgets(input_buffer,strlen(input_buffer),fp));i++) {
@@ -70,4 +93,6 @@ hospital_t* read_information(int *num_of_hospitals) {
 
 	return hosp;
 }
+
+
 

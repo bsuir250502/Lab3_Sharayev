@@ -11,7 +11,7 @@ char* myfgets(char *str, int num) {
     return str;
 }
 
-int print_manual(int argc,char **argv) {
+int print_manual(void) {
     char input_buffer[128];
     FILE *fp=fopen("Readme.txt","r");
     while(fgets(input_buffer,strlen(input_buffer),fp)) {

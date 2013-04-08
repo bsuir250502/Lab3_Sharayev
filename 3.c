@@ -6,7 +6,7 @@
 typedef struct hospital {
     int num_of_beds;
     int num_of_empty_beds;
-    int *(distance)(int, int);
+    int *(distance)(int);
 } hospital_t;
 
 typedef struct person {

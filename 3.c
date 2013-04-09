@@ -78,7 +78,7 @@ char read_argument(int argc, char **argv) {
 
 int calculate_distance(coordinate_t a, coordinate_t b ) {
 	int square_dist;
-	square_dist = (a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y)
+	square_dist = (a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y);
 	return dist(square_dist); 
 }
 

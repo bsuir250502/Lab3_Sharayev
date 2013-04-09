@@ -85,7 +85,7 @@ int calculate_distance(coordinate_t a, coordinate_t b ) {
 hospital_t* read_information(int *num_of_hospitals) {
 	char input_buffer[128], *endptr;
 	int i, num_of_beds[MAX_NUM_OF_HOSPITALS], num_of_empty_beds[MAX_NUM_OF_HOSPITALS];
-	FILE *fp = fopen("D:\Input.txt", "r");
+	FILE *fp = fopen("Input.txt", "r");
 	hospital_t *hosp;
 
 	for(i=0; (fgets(input_buffer,strlen(input_buffer),fp));i++) {

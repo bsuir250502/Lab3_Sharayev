@@ -2,22 +2,32 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mylib.h"
+#include <math.h>
 #define MAX_NUM_OF_HOSPITALS 12
 
+typedef struct {
+	int x;
+	int y;
+} coordinate_t;
+
+int calculate_distance(coordinate_t, coordinate_t);
+
 typedef struct hospital {
-    int num_of_beds;
-    int num_of_empty_beds;
-    int *(distance)(int);
+	int num_of_beds;
+	int num_of_empty_beds;
+	coordinate_t coord;
+	int *(distance)(coordinate_t, coordinate_t);
 } hospital_t;
 
 typedef struct person {
-    char surname[16];
-    int hospital;
-    struct person *next;
+	char surname[16];
+	int hospital;
+	coordinate_t coord;
+	struct person *next;
 } person_t;
 
 char read_argument(int, char **);
-int calculate_distance(int);
+int calculate_distance(coordinate_t, coordinate_t);
 hospital_t* read_information(int *);
 person_t* fitting_persons_to_the_hospitals(hospital_t *, int);
 
@@ -66,8 +76,10 @@ char read_argument(int argc, char **argv) {
 	return '0';
 }
 
-int calculate_distance(int max_distance) {
-	return random_number_in_range(1, max_distance); 
+int calculate_distance(coordinate_t a, coordinate_t b ) {
+	int square_dist;
+	square_dist = (a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y)
+	return dist(square_dist); 
 }
 
 hospital_t* read_information(int *num_of_hospitals) {
@@ -93,6 +105,3 @@ hospital_t* read_information(int *num_of_hospitals) {
 
 	return hosp;
 }
-
-
-

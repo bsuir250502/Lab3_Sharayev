@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define SIZE( x ) (sizeof(x))/(sizeof(*x))
+
 char* myfgets(char *, int);
 int print_manual(void);
 int input_number_in_range(int, int);

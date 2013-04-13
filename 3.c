@@ -46,6 +46,30 @@ int main(int argc, char **argv)
     return 0;
 }
 
+hospital_t* read_information(int *num_of_hospitals) {
+	char input_buffer[128], *endptr;
+	int i, num_of_beds[MAX_NUM_OF_HOSPITALS], num_of_empty_beds[MAX_NUM_OF_HOSPITALS];
+	FILE *fp = fopen("Input.txt", "r");
+	hospital_t *hosp;
+
+	for(i=0; (fgets(input_buffer,strlen(input_buffer),fp));i++) {
+		num_of_beds[i]=strtol(input_buffer, &endptr, 4);
+		
+	}
+	*num_of_hospitals = i;
+	for(i=0; i < *num_of_hospitals; i++) {
+		fgets(input_buffer,strlen(input_buffer),fp);
+		num_of_empty_beds[i]=strtol(input_buffer, &endptr, 4);
+	}
+	hosp=(hospital_t *)malloc(*num_of_hospitals * sizeof(hospital_t));
+	for(i=0; i < *num_of_hospitals; i++) {
+		hosp[i].num_of_beds = num_of_beds[i];
+		hosp[i].num_of_empty_beds = num_of_empty_beds[i];
+	}
+
+	return hosp;
+}
+
 person_t* fitting_persons_to_the_hospitals(const hospital_t *hosp, const int num_of_hospitals) {
 	int num_of_persons, i, j, hospital_num;
 	person_t *person;
@@ -80,28 +104,4 @@ int calculate_distance(coordinate_t a, coordinate_t b ) {
 	int square_dist;
 	square_dist = (a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y);
 	return dist(square_dist); 
-}
-
-hospital_t* read_information(int *num_of_hospitals) {
-	char input_buffer[128], *endptr;
-	int i, num_of_beds[MAX_NUM_OF_HOSPITALS], num_of_empty_beds[MAX_NUM_OF_HOSPITALS];
-	FILE *fp = fopen("Input.txt", "r");
-	hospital_t *hosp;
-
-	for(i=0; (fgets(input_buffer,strlen(input_buffer),fp));i++) {
-		num_of_beds[i]=strtol(input_buffer, &endptr, 4);
-		
-	}
-	*num_of_hospitals = i;
-	for(i=0; i < *num_of_hospitals; i++) {
-		fgets(input_buffer,strlen(input_buffer),fp);
-		num_of_empty_beds[i]=strtol(input_buffer, &endptr, 4);
-	}
-	hosp=(hospital_t *)malloc(*num_of_hospitals * sizeof(hospital_t));
-	for(i=0; i < *num_of_hospitals; i++) {
-		hosp[i].num_of_beds = num_of_beds[i];
-		hosp[i].num_of_empty_beds = num_of_empty_beds[i];
-	}
-
-	return hosp;
 }

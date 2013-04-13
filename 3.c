@@ -4,8 +4,6 @@
 #include "mylib.h"
 #include <math.h>
 #define MAX_NUM_OF_HOSPITALS 12
-#define MAX_NUM_OF_BEDS 10
-
 
 typedef struct {
     int x;
@@ -20,8 +18,8 @@ typedef struct person {
 } person_t;
 
 typedef struct hospital {
-    int *num_of_beds;
-    int *num_of_empty_beds;
+    int num_of_beds;
+    int num_of_empty_beds;
     coordinate_t coord;
     /*int *(distance)(coordinate_t, coordinate_t); */
 } hospital_t;
@@ -58,22 +56,31 @@ int main(int argc, char **argv)
 
 int read_information(hospital_t * hosp)
 {
-    int num_of_hospitals;/*, i, num_of_beds[MAX_NUM_OF_BEDS],
-        num_of_empry_beds[MAX_NUM_OF_BEDS]*/;
+    int num_of_hospitals, i;
     char input_buffer[128], *endptr;
     FILE *fp = fopen("Input.in", "r");
-    
-    printf("\nWORK\n");
+
     fgets(input_buffer, SIZE(input_buffer), fp);
-    printf("\nWORK\n");
     num_of_hospitals = strtol(input_buffer, &endptr, 10);
-        printf("\nWORK\n");
-/*
+    hosp = (hospital_t *) malloc(num_of_hospitals * sizeof(hosp));
+
 	for(i = 0; i < num_of_hospitals;i++) {
-		fgets(input_buffer,SIZE(input_buffer),fp))
-		num_of_beds[i]=strtol(input_buffer, &endptr, 10);
+		fgets(input_buffer,SIZE(input_buffer),fp);
+		hosp[i].num_of_beds = strtol(input_buffer, &endptr, 10);
 	}
-*/
+	for(i = 0; i < num_of_hospitals;i++) {
+		fgets(input_buffer,SIZE(input_buffer),fp);
+		hosp[i].num_of_empty_beds = strtol(input_buffer, &endptr, 10);
+	}
+
+	for(i = 0; i < num_of_hospitals;i++) {
+		fgets(input_buffer,SIZE(input_buffer),fp);
+		hosp[i].coord.x = strtol(input_buffer, &endptr, 10);
+		hosp[i].coord.y = strtol(endptr, &endptr, 10);
+	}
+	for(i = 0; i < num_of_hospitals;i++) {
+	printf("(%d;%d)", hosp[i].coord.x ,hosp[i].coord.y );
+	}
 
     return num_of_hospitals;
 }

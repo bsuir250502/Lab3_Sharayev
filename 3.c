@@ -4,24 +4,26 @@
 #include "mylib.h"
 #include <math.h>
 #define MAX_NUM_OF_HOSPITALS 12
+#define MAX_NUM_OF_BEDS 10
+
 
 typedef struct {
-	int x;
-	int y;
+    int x;
+    int y;
 } coordinate_t;
 
 int calculate_distance(coordinate_t, coordinate_t);
 
 typedef struct person {
-	char surname[16];
-	coordinate_t coord;
+    char surname[16];
+    coordinate_t coord;
 } person_t;
 
 typedef struct hospital {
-	int num_of_beds;
-	int num_of_empty_beds;
-	coordinate_t coord;
-	/*int *(distance)(coordinate_t, coordinate_t);*/
+    int *num_of_beds;
+    int *num_of_empty_beds;
+    coordinate_t coord;
+    /*int *(distance)(coordinate_t, coordinate_t); */
 } hospital_t;
 
 
@@ -35,29 +37,45 @@ int calculate_distance(coordinate_t, coordinate_t);
 person_t* fitting_persons_to_the_hospitals(const hospital_t *, int);
 */
 
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
-	int num_of_hospitals;
-	hospital_t *hosp = NULL;
-	person_t *person;
+    int num_of_hospitals;
+    hospital_t *hosp = NULL;
+    /*person_t *person;*/
 
-    if(read_argument(argc,argv) == 'h') {
+    if (read_argument(argc, argv) == 'h') {
         print_manual();
         return 0;
     }
-    
+
     num_of_hospitals = read_information(hosp);
-    printf("%d", num_of_hospitals);
+    printf("num_of_hospitals = %d \n", num_of_hospitals);
     /*hosp = read_information(&num_of_hospitals);
-	person = fitting_persons_to_the_hospitals(hosp, num_of_hospitals);*/
-	
+       person = fitting_persons_to_the_hospitals(hosp, num_of_hospitals); */
+
     return 0;
 }
 
-int read_information(hospital_t *hosp) {
-	int num_of_hospitals;
+int read_information(hospital_t * hosp)
+{
+    int num_of_hospitals;/*, i, num_of_beds[MAX_NUM_OF_BEDS],
+        num_of_empry_beds[MAX_NUM_OF_BEDS]*/;
+    char input_buffer[128], *endptr;
+    FILE *fp = fopen("Input.in", "r");
+    
+    printf("\nWORK\n");
+    fgets(input_buffer, SIZE(input_buffer), fp);
+    printf("\nWORK\n");
+    num_of_hospitals = strtol(input_buffer, &endptr, 10);
+        printf("\nWORK\n");
+/*
+	for(i = 0; i < num_of_hospitals;i++) {
+		fgets(input_buffer,SIZE(input_buffer),fp))
+		num_of_beds[i]=strtol(input_buffer, &endptr, 10);
+	}
+*/
 
-	return 1;
+    return num_of_hospitals;
 }
 
 /*hospital_t* read_information(int *num_of_hospitals) {
@@ -85,7 +103,7 @@ int read_information(hospital_t *hosp) {
 }
 
 
-/*person_t* fitting_persons_to_the_hospitals(const hospital_t *hosp, const int num_of_hospitals) {
+person_t* fitting_persons_to_the_hospitals(const hospital_t *hosp, const int num_of_hospitals) {
 	int num_of_persons, i, j, hospital_num;
 	person_t *person;
 	num_of_persons=input_number_in_range(1,100);
@@ -112,11 +130,11 @@ int calculate_distance(coordinate_t a, coordinate_t b ) {
 */
 
 char read_argument(int argc, char **argv) {
-	if(argc == 2) {
-		if(!(strcmp(argv[1], "-h")) ) {
-			return 'h';
-		} 
-	}
+    if (argc == 2) {
+        if (!(strcmp(argv[1], "-h"))) {
+            return 'h';
+        }
+    }
 
-	return '0';
+    return '0';
 }

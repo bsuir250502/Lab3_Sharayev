@@ -29,14 +29,14 @@ typedef struct hospital {
     long int (*dist) (coordinate_t, coordinate_t);
 } hospital_t;
 
-
 hospital_t *read_information_for_hospitals(int *);
 char read_argument(int, char **);
 int add_patient(hospital_t *, int);
-int fit_patient_to_the_hospital(hospital_t *, person_t *);
+int place_patient_to_the_hospital(hospital_t *, person_t *);
 int find_patient(hospital_t *, char *, int);
 int find_better_hospital(hospital_t *, person_t *, int);
 int discharge_patient(person_t *);
+int free_memory(hospital_t *, int);
 
 int main(int argc, char **argv)
 {
@@ -51,6 +51,7 @@ int main(int argc, char **argv)
     hosp = read_information_for_hospitals(&num_of_hospitals);
     while (!(add_patient(hosp, num_of_hospitals)));
 
+    free_memory(hosp, num_of_hospitals);
     return 0;
 }
 
@@ -118,7 +119,7 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
             ("There is no places in hospitals, you need to specify someone to out of the hospital");
         return 0;
     }
-    fit_patient_to_the_hospital(&hosp[better_hosp_num - 1], patient);
+    place_patient_to_the_hospital(&hosp[better_hosp_num - 1], patient);
     hosp[better_hosp_num - 1].num_of_empty_beds--;
 
     return 0;
@@ -128,7 +129,6 @@ int find_patient(hospital_t * hosp, char *surname, int num_of_hospitals)
 {
     int i;
     person_t *some_person;
-
     some_person = (person_t *) malloc(sizeof(some_person));
 
     for (i = 0; i < num_of_hospitals; i++) {
@@ -141,12 +141,25 @@ int find_patient(hospital_t * hosp, char *surname, int num_of_hospitals)
                     printf("deleting\n");
                     discharge_patient(some_person);
                 }
+                free(some_person);
                 return 1;
             }
             some_person = some_person->next;
         }
     }
 
+    free(some_person);
+    return 0;
+}
+
+int discharge_patient(person_t * patient)
+{
+    person_t *tmp;
+
+    tmp = patient;
+    patient = patient->next;
+
+    free(tmp);
     return 0;
 }
 
@@ -164,18 +177,7 @@ int find_better_hospital(hospital_t * hosp, person_t * patient, int num_of_hospi
     return better_hosp_num;
 }
 
-int discharge_patient(person_t * patient)
-{
-    person_t *tmp;
-
-    tmp = patient;
-    patient = patient->next;
-
-    free(tmp);
-    return 0;
-}
-
-int fit_patient_to_the_hospital(hospital_t * hospital, person_t * patient)
+int place_patient_to_the_hospital(hospital_t * hospital, person_t * patient)
 {
     if (!(hospital->first)) {
         hospital->first = patient;
@@ -204,4 +206,21 @@ long int calculate_distance(coordinate_t a, coordinate_t b)
     long int square_dist;
     square_dist = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
     return square_dist;
+}
+
+int free_memory(hospital_t *hosp, int num_of_hospitals) 
+{
+    int i;
+    person_t *some_person;
+    some_person = (person_t *) malloc(sizeof(some_person));
+
+    for (i = 0; i < num_of_hospitals; i++) {
+        some_person = hosp[i].first;
+        while (some_person) {
+        discharge_patient(some_person);
+        }
+    }
+
+    free(hosp);
+    return 0;
 }

@@ -5,7 +5,7 @@ int confirm_choice(void)
     char arg;
     printf("Set (Y/N)\n");
     while (1) {
-        fgetc(arg);
+        arg = getchar();
         if (arg == 'Y' || arg == 'y') {
             return 1;
         }

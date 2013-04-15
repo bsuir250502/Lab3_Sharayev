@@ -35,8 +35,8 @@ char read_argument(int, char **);
 int add_patient(hospital_t *, int);
 int fit_patient_to_the_hospital(hospital_t *, person_t *);
 int find_patient(hospital_t *, char *, int);
-int find_better_hospital(person_t *, hospital_t *);
-int discharge_patient(hospital_t *, person_t *);
+int find_better_hospital(hospital_t *, person_t *, int);
+int discharge_patient(person_t *);
 
 int main(int argc, char **argv)
 {
@@ -86,12 +86,11 @@ hospital_t *read_information_for_hospitals(int *num_of_hospitals)
 
 int add_patient(hospital_t * hosp, int num_of_hospitals)
 {
-    int i, better_hosp_num = 0;
+    int better_hosp_num = 0;
     person_t *patient;
-    char input_buffer[128;
-        ]
+    char input_buffer[128];
 
-        printf("Specify the surname of a patient(end, to exit):  ");
+    printf("Specify the surname of a patient(end, to exit):  ");
     myfgets(input_buffer, 16);
     if (!(strcmp(input_buffer, "end"))) {
         printf("Shutdown\n");
@@ -113,7 +112,7 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
     patient->coord.x = input_number_in_range(1, 100);
     patient->coord.y = input_number_in_range(1, 100);
 
-    better_hosp_num = find_better_hospital(patient, &hosp);
+    better_hosp_num = find_better_hospital(hosp, patient, num_of_hospitals);
     if (!better_hosp_num) {
         printf
             ("There is no places in hospitals, you need to specify someone to out of the hospital");
@@ -133,14 +132,14 @@ int find_patient(hospital_t * hosp, char *surname, int num_of_hospitals)
     some_person = (person_t *) malloc(sizeof(some_person));
 
     for (i = 0; i < num_of_hospitals; i++) {
-        some_person = hosp[i]->first;
+        some_person = hosp[i].first;
         while (some_person) {
             if (!(strcmp(some_person->surname, surname))) {
                 printf("Do you want to delete %s from the %d hospital?\n",
                        surname, i + 1);
-                if (confirm_choice) {
+                if (confirm_choice()) {
                     printf("deleting\n");
-                    discharge_patient(hosp, some_person);
+                    discharge_patient(some_person);
                 }
                 return 1;
             }
@@ -151,7 +150,7 @@ int find_patient(hospital_t * hosp, char *surname, int num_of_hospitals)
     return 0;
 }
 
-int find_better_hospital(hospital_t * hosp, person_t * patient)
+int find_better_hospital(hospital_t * hosp, person_t * patient, int num_of_hospitals)
 {
     int i, better_hosp_num = 0;
     for (i = 0; i < num_of_hospitals; i++) {
@@ -165,7 +164,7 @@ int find_better_hospital(hospital_t * hosp, person_t * patient)
     return better_hosp_num;
 }
 
-int discharge_patient(hospital_t * hosp, person_t * patient)
+int discharge_patient(person_t * patient)
 {
     person_t *tmp;
 

@@ -138,10 +138,9 @@ int find_patient(hospital_t * hosp, char *surname, int num_of_hospitals)
                 printf("Do you want to delete %s from the %d hospital?\n",
                        surname, i + 1);
                 if (confirm_choice()) {
-                    printf("deleting\n");
+                    printf("Deleting...\n");
                     discharge_patient(some_person);
                 }
-                free(some_person);
                 return 1;
             }
             some_person = some_person->next;

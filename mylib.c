@@ -1,5 +1,25 @@
 #include "mylib.h"
 
+int confirm_choice(void)
+{
+    char arg;
+    printf("Set (Y/N)\n");
+    while (1) {
+        arg = getchar();
+        if (arg == 'Y' || arg == 'y') {
+            return 1;
+        }gi
+        if (arg == 'N' || arg == 'n') {
+            return 0;
+        } else {
+            printf("Wrong key");
+        }
+    }
+
+    return 0;
+}
+
+
 char* myfgets(char *str, int num) {
     if( !(fgets(str, num, stdin)) ) {
         return 0;

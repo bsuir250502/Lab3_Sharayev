@@ -7,9 +7,10 @@
 
 #define SIZE( x ) (sizeof(x))/(sizeof(*x))
 
-char* myfgets(char *, int);
+char *myfgets(char *, int);
 int print_manual(void);
 int input_number_in_range(int, int);
 int random_number_in_range(int, int);
+int confirm_choice(void);
 
 #endif

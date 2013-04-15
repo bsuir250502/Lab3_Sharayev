@@ -36,6 +36,7 @@ int place_patient_to_the_hospital(hospital_t *, person_t *);
 int find_patient(hospital_t *, char *, int);
 int find_better_hospital(hospital_t *, person_t *, int);
 int discharge_patient(person_t *);
+int print_patients(hospital_t *, int);
 int free_memory(hospital_t *, int);
 
 int main(int argc, char **argv)
@@ -116,9 +117,11 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
     better_hosp_num = find_better_hospital(hosp, patient, num_of_hospitals);
     if (!better_hosp_num) {
         printf
-            ("There is no places in hospitals, you need to specify someone to out of the hospital");
+            ("There is no places in hospitals, do you want to see the list of patients to specify someone to out of the hospital?");
+            if(confirm_choice()) { 
+                print_patients(hosp, num_of_hospitals);
+            }
         return 0;
-    }
     place_patient_to_the_hospital(&hosp[better_hosp_num - 1], patient);
     hosp[better_hosp_num - 1].num_of_empty_beds--;
 
@@ -221,5 +224,22 @@ int free_memory(hospital_t *hosp, int num_of_hospitals)
     }
 
     free(hosp);
+    return 0;
+}
+
+int print_patients(hospital_t *hosp, int num_of_hospitals) 
+{
+    int i;
+    person_t *some_person;
+
+    for (i = 0; i < num_of_hospitals; i++) {
+        printf("List of patents of the %d hospital:\n", i + 1);
+        some_person = hosp[i].first;
+        while (some_person) {
+            puts(some_person->surname);
+            some_person = some_person->next;
+        }
+    }
+
     return 0;
 }

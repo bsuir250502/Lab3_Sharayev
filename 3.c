@@ -3,19 +3,21 @@
 #include <string.h>
 #include "mylib.h"
 #include <math.h>
-#define MAX_NUM_OF_HOSPITALS 12
+#define MAX_NUM_OF_HOSPITALS 16
+#define MAX_NUM_OF_BEDS 16
 
 typedef struct {
-    int x;
-    int y;
+    long int x;
+    long int y;
 } coordinate_t;
 
-int calculate_distance(coordinate_t, coordinate_t);
+long int calculate_distance(coordinate_t, coordinate_t);
 
 typedef struct person {
-	struct person *next;
+
     char surname[16];
     coordinate_t coord;
+    struct person *next;
 } person_t;
 
 typedef struct hospital {
@@ -24,77 +26,86 @@ typedef struct hospital {
     int num_of_beds;
     int num_of_empty_beds;
     coordinate_t coord;
-    int (*dist)(coordinate_t, coordinate_t); 
+    long int (*dist)(coordinate_t, coordinate_t); 
 } hospital_t;
 
 
 
 
-int read_information_of_hospitals(hospital_t *);
+hospital_t * read_information_for_hospitals(int *);
 char read_argument(int, char **);
 int add_patient(hospital_t *, int);
-int fit_person_to_the_hospital(hospital_t *,person_t *);
+int fit_patient_to_the_hospital(hospital_t *,person_t *);
+int search_patient(hospital_t *, char *, int);
+
 /*
 
-int calculate_distance(coordinate_t, coordinate_t);
-person_t* fitting_persons_to_the_hospitals(const hospital_t *, int);
+
+
+
 */
 
 int main(int argc, char **argv)
 {
-    int num_of_hospitals;
-    hospital_t *hosp = NULL;
+    int num_of_hospitals = 0;
+    hospital_t *hosp;
 
     if (read_argument(argc, argv) == 'h') {
         print_manual();
         return 0;
     }
 
-    num_of_hospitals = read_information_of_hospitals(hosp);
-    printf("num_of_hospitals = %d \n", num_of_hospitals);
+    hosp = read_information_for_hospitals(&num_of_hospitals);
+    if(!hosp) {
+    	printf("Memory isn't allocated");
+    	return 0;
+    }
+	
+    
+    add_patient(hosp, num_of_hospitals);
 
     return 0;
 }
 
-int read_information_of_hospitals(hospital_t * hosp)
+hospital_t* read_information_for_hospitals(int *num_of_hospitals)
 {
-    int num_of_hospitals, i;
-    char input_buffer[128], *endptr;
-    FILE *fp = fopen("Input.in", "r");
+    int i;
+	hospital_t *hosp;
 
-    fgets(input_buffer, SIZE(input_buffer), fp);
-    num_of_hospitals = strtol(input_buffer, &endptr, 10);
-    hosp = (hospital_t *) malloc(num_of_hospitals * sizeof(hosp));
+	printf("Specify number of hospitals:  ");
+    *num_of_hospitals = input_number_in_range(1,MAX_NUM_OF_HOSPITALS);
+    hosp = (hospital_t *) malloc(*num_of_hospitals * sizeof(hosp));
+    if(!hosp) {
+    	return 0;
+    }
 
-	for(i = 0; i < num_of_hospitals;i++) {
-		fgets(input_buffer,SIZE(input_buffer),fp);
-		hosp[i].num_of_beds = strtol(input_buffer, &endptr, 10);
-	}
-	for(i = 0; i < num_of_hospitals;i++) {
-		fgets(input_buffer,SIZE(input_buffer),fp);
-		hosp[i].num_of_empty_beds = strtol(input_buffer, &endptr, 10);
-	}
-
-	for(i = 0; i < num_of_hospitals;i++) {
-		fgets(input_buffer,SIZE(input_buffer),fp);
-		hosp[i].coord.x = strtol(input_buffer, &endptr, 10);
-		hosp[i].coord.y = strtol(endptr, &endptr, 10);
+	for(i = 0; i < *num_of_hospitals;i++) {
+		printf("Specify number of beds for the %d hospital:  ", i+1);
+		hosp[i].num_of_beds = input_number_in_range(1,MAX_NUM_OF_BEDS);
+		hosp[i].num_of_empty_beds = hosp[i].num_of_beds;
+		printf("Specify coordinates:\n x = ");
+		hosp[i].coord.x = input_number_in_range(1,180);
+		printf(" y = ");
+		hosp[i].coord.y = input_number_in_range(1,180);
 		hosp[i].dist = calculate_distance;
-	}
-	/*
-	for(i = 0; i < num_of_hospitals;i++) {
-	printf("(%d;%d)", hosp[i].coord.x ,hosp[i].coord.y );
-	}
-	*/
+		hosp[i].first = NULL;
+		hosp[i].last = NULL;
 
-    return num_of_hospitals;
+	}
+
+    return hosp;
 }
 
 
 int add_patient(hospital_t *hosp, int num_of_hospitals) {
+	printf("add_patient\n");
 	int i, better_hosp_num = 0;
 	person_t *patient;
-	patient = (person_t *) malloc(sizeof(patient));
+	patient = (person_t *)malloc(sizeof(patient));
+	if(!patient) {
+    	printf("Memory inffusive");
+    	return 1;
+    }
 	patient->next = NULL;
 
 	printf("Specify the surname of patient(end, to exit):  ");
@@ -108,12 +119,28 @@ int add_patient(hospital_t *hosp, int num_of_hospitals) {
 				better_hosp_num = i;
 			}
 	}
-	fit_person_to_the_hospital(hosp[better_hosp_num], patient);
+	fit_patient_to_the_hospital(&hosp[better_hosp_num], patient);
 
 	return 0;
 }
 
-int fit_person_to_the_hospital(hospital_t *hospital,person_t *patient) {
+int search_patient(hospital_t * hosp, char *surname, int num_of_hospitals) {
+	int i;
+	person_t some_person;
+	for(i=0; i< num_of_hospitals; i++) {
+		some_person = hosp[i]->first;
+		while(some_person) {
+			if(!(strcmp(some_person->surname, surname)) ) {
+				printf("something");
+			}
+			some_person = some_person->next;
+		}
+	}
+
+	return 0;
+}
+
+int fit_patient_to_the_hospital(hospital_t *hospital,person_t *patient) {
 	if(!(hospital->first)) {
 		hospital->first = patient;
 	}
@@ -125,6 +152,7 @@ int fit_person_to_the_hospital(hospital_t *hospital,person_t *patient) {
 	return 0;
 }
 
+
 char read_argument(int argc, char **argv) {
     if (argc == 2) {
         if (!(strcmp(argv[1], "-h"))) {
@@ -135,8 +163,8 @@ char read_argument(int argc, char **argv) {
     return '0';
 }
 
-int calculate_distance(coordinate_t a, coordinate_t b ) {
-	int square_dist;
+long int calculate_distance(coordinate_t a, coordinate_t b ) {
+	long int square_dist;
 	square_dist = (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y);
 	return square_dist; 
 }

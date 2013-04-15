@@ -74,9 +74,9 @@ hospital_t *read_information_for_hospitals(int *num_of_hospitals)
         hosp[i].num_of_beds = input_number_in_range(1, MAX_NUM_OF_BEDS);
         hosp[i].num_of_empty_beds = hosp[i].num_of_beds;
         printf("Specify coordinates:\n x = ");
-        hosp[i].coord.x = input_number_in_range(1, 180);
+        hosp[i].coord.x = input_number_in_range(0, 180);
         printf(" y = ");
-        hosp[i].coord.y = input_number_in_range(1, 180);
+        hosp[i].coord.y = input_number_in_range(0, 180);
         hosp[i].dist = calculate_distance;
         hosp[i].first = NULL;
         hosp[i].last = NULL;
@@ -111,8 +111,8 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
 
     strncpy(patient->surname, input_buffer, 16);
     printf("His coordinates(x,y): \n");
-    patient->coord.x = input_number_in_range(1, 100);
-    patient->coord.y = input_number_in_range(1, 100);
+    patient->coord.x = input_number_in_range(0, 180);
+    patient->coord.y = input_number_in_range(0, 180);
 
     better_hosp_num = find_better_hospital(hosp, patient, num_of_hospitals);
     if (!better_hosp_num) {

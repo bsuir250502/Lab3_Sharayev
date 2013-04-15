@@ -1,65 +1,67 @@
 #include "mylib.h"
 
-int confirm_choice(void) 
-{   
+int confirm_choice(void)
+{
     char arg;
-    printf("Set Yes or(Y/N)\n");
-    while(1) {
+    printf("Set (Y/N)\n");
+    while (1) {
         fgetc(arg);
-        if(arg == 'Y' || arg == 'y') {
+        if (arg == 'Y' || arg == 'y') {
             return 1;
         }
-        if(arg == 'N' || arg == 'n') {
+        if (arg == 'N' || arg == 'n') {
             return 0;
-        } 
-        else {
+        } else {
             printf("Wrong key");
-        }     
+        }
     }
 
     return 0;
 }
 
-char* myfgets(char *str, int num) {
-    if( !(fgets(str, num, stdin)) ) {
+char *myfgets(char *str, int num)
+{
+    if (!(fgets(str, num, stdin))) {
         return 0;
+    } else {
+        str[strlen(str) - 1] = '\0';
     }
-    else {
-        str[strlen(str)-1]='\0';
-    }
-    
+
     return str;
 }
 
-int print_manual(void) {
+int print_manual(void)
+{
     char input_buffer[128];
-    FILE *fp=fopen("Manual.txt","r");
-    while(fgets(input_buffer,SIZE(input_buffer),fp)) {
-        printf("%s",input_buffer);
+    FILE *fp = fopen("Manual.txt", "r");
+    while (fgets(input_buffer, SIZE(input_buffer), fp)) {
+        printf("%s", input_buffer);
     }
     printf("\n");
     fclose(fp);
-    
+
     return 0;
 }
 
-int input_number_in_range(int from, int to) {
+int input_number_in_range(int from, int to)
+{
     int n;
     char *endptr;
     char input_buffer[128];
     int first = 1;
     do {
-        if(!first) {
+        if (!first) {
             printf("Please enter number between %d and %d\n", from, to);
         }
         myfgets(input_buffer, 128);
         n = strtol(input_buffer, &endptr, 10);
         first = 0;
-    } while( *endptr || n < from || n > to);
-    
+    } while (*endptr || n < from || n > to);
+
     return n;
 }
 
-int random_number_in_range(int from, int to) {
-    return from+(rand())%(to-from+1);
+int random_number_in_range(int from, int to)
+{
+    return from + (rand()) % (to - from + 1);
 }

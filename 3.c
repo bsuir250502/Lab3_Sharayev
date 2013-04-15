@@ -158,7 +158,7 @@ int discharge_patient(person_t * patient)
 {
     person_t *tmp;
 
-    tmp = patient;
+    tmp = patient->next;
     patient = patient->next;
 
     free(tmp);

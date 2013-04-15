@@ -1,3 +1,17 @@
 ____________________________
           Manual
 ____________________________
+
+1) Specify the number of hospitals(1 <= number_of_hospitals <= 16).
+2) Fill information of hospitals in format:
+  - Number of beds
+  - Coordinates
+    - Coordinate X
+    - Coordinate Y.
+3) Add patients:
+  - Specify the surname(set end in this field to stop reading). If this person already in hospital set yes(Y) or no(N) to discharge him of set another surname.
+  - Specify coordintes in format:
+    - Coordinate X
+    - Coordinate Y.
+After this steps person will be fitted to the nearest hospital or you will see the message, that there is no empty beds to place him. 
+If there is no places, you can discharge someone of the patients and place the another to his bed.

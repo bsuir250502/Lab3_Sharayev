@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     }
 
     hosp = read_information_for_hospitals(&num_of_hospitals);
-    while (!(add_patient(hosp, num_of_hospitals)));
+    while (!(add_patient(hosp, num_of_hospitals)) );
 
     free_memory(hosp, num_of_hospitals);
     return 0;
@@ -103,7 +103,7 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
         return 0;
     }
 
-    if (!(patient = (person_t *) malloc(sizeof(patient)))) {
+    if (!(patient = (person_t *) malloc(sizeof(patient)) )) {
         printf("Memory isn't allocated");
         exit(1);
     }
@@ -137,7 +137,7 @@ int find_patient(hospital_t * hosp, char *surname, int num_of_hospitals)
     for (i = 0; i < num_of_hospitals; i++) {
         some_person = hosp[i].first;
         while (some_person) {
-            if (!(strcmp(some_person->surname, surname))) {
+            if (!(strcmp(some_person->surname, surname)) ) {
                 printf("Do you want to delete %s from the %d hospital?\n",
                        surname, i + 1);
                 if (confirm_choice()) {
@@ -172,7 +172,7 @@ int find_better_hospital(hospital_t * hosp, person_t * patient, int num_of_hospi
         if ((hosp[i].num_of_beds > hosp[i].num_of_empty_beds) ||
             (hosp[i].dist(hosp[i].coord, patient->coord) <
              hosp[better_hosp_num].dist(hosp[better_hosp_num].coord,
-                                        patient->coord))) {
+                                        patient->coord)) ) {
             better_hosp_num = i + 1;
         }
     }
@@ -195,7 +195,7 @@ int place_patient_to_the_hospital(hospital_t * hospital, person_t * patient)
 char read_argument(int argc, char **argv)
 {
     if (argc == 2) {
-        if (!(strcmp(argv[1], "-h"))) {
+        if (!(strcmp(argv[1], "-h")) ) {
             return 'h';
         }
     }

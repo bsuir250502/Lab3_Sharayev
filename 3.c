@@ -122,6 +122,7 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
                 print_patients(hosp, num_of_hospitals);
             }
         return 0;
+    }
     place_patient_to_the_hospital(&hosp[better_hosp_num - 1], patient);
     hosp[better_hosp_num - 1].num_of_empty_beds--;
 

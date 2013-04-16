@@ -2,14 +2,14 @@
 
 int confirm_choice(void)
 {
-    char arg;
+    char arg[3];
     printf("Set (Y/N)\n");
     while (1) {
-        arg = getchar();
-        if (arg == 'Y' || arg == 'y') {
+        myfgets(arg, 3);
+        if (arg[0] == 'Y' || arg[0] == 'y') {
             return 1;
         }
-        if (arg == 'N' || arg == 'n') {
+        if (arg[0] == 'N' || arg[0] == 'n') {
             return 0;
         } else {
             printf("Wrong key");

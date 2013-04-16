@@ -63,7 +63,7 @@ hospital_t *read_information_for_hospitals(int *num_of_hospitals)
 
     printf("Specify number of hospitals:  ");
     *num_of_hospitals = input_number_in_range(1, MAX_NUM_OF_HOSPITALS);
-    hosp = (hospital_t *) malloc(*num_of_hospitals * sizeof(hosp));
+    hosp = (hospital_t *) malloc(*num_of_hospitals * sizeof(*hosp));
     if (!hosp) {
         printf("Memory isn't allocated");
         exit(1);
@@ -103,7 +103,7 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
         return 0;
     }
 
-    if (!(patient = (person_t *) malloc(sizeof(patient)) )) {
+    if (!(patient = (person_t *) malloc(sizeof(*patient)) )) {
         printf("Memory isn't allocated");
         exit(1);
     }
@@ -133,7 +133,6 @@ int find_patient(hospital_t * hosp, char *surname, int num_of_hospitals)
 {
     int i;
     person_t *some_person;
-    some_person = (person_t *) malloc(sizeof(some_person));
 
     for (i = 0; i < num_of_hospitals; i++) {
         some_person = hosp[i].first;

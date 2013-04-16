@@ -61,7 +61,7 @@ hospital_t *read_information_for_hospitals(int *num_of_hospitals)
     int i;
     hospital_t *hosp;
 
-    printf("Specify number of hospitals:  ");
+    printf("Specify number of hospitals: ");
     *num_of_hospitals = input_number_in_range(1, MAX_NUM_OF_HOSPITALS);
     hosp = (hospital_t *) malloc(*num_of_hospitals * sizeof(*hosp));
     if (!hosp) {
@@ -70,7 +70,7 @@ hospital_t *read_information_for_hospitals(int *num_of_hospitals)
     }
 
     for (i = 0; i < *num_of_hospitals; i++) {
-        printf("Specify number of beds for the %d hospital:  ", i + 1);
+        printf("Specify number of beds for the %d hospital: ", i + 1);
         hosp[i].num_of_beds = input_number_in_range(1, MAX_NUM_OF_BEDS);
         hosp[i].num_of_empty_beds = hosp[i].num_of_beds;
         printf("Specify coordinates:\n x = ");
@@ -92,20 +92,20 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
     person_t *patient;
     char input_buffer[128];
 
-    printf("Specify the surname of a patient(end, to exit):  ");
+    printf("Specify the surname of a patient(end, to exit): ");
     myfgets(input_buffer, 16);
     if (!(strcmp(input_buffer, "end"))) {
         printf("Shutdown\n");
         return 1;
     }
-    if (find_patient(hosp, input_buffer, num_of_hospitals)) {
-        printf("Enter another surname\n");
-        return 0;
-    }
-
     if (!(patient = (person_t *) malloc(sizeof(*patient)) )) {
         printf("Memory isn't allocated");
         exit(1);
+    }
+    
+    if (find_patient(hosp, input_buffer, num_of_hospitals)) {
+        printf("Enter another surname\n");
+        return 0;
     }
     patient->next = NULL;
 
@@ -118,7 +118,7 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
     if (!better_hosp_num) {
         printf
             ("There is no places in hospitals, do you want to see the list of patients to specify someone to out of the hospital?");
-            if(confirm_choice()) { 
+            if(confirm_choice()) {
                 print_patients(hosp, num_of_hospitals);
             }
         return 0;
@@ -211,11 +211,10 @@ long int calculate_distance(coordinate_t a, coordinate_t b)
     return square_dist;
 }
 
-int free_memory(hospital_t *hosp, int num_of_hospitals) 
+int free_memory(hospital_t *hosp, int num_of_hospitals)
 {
     int i;
     person_t *some_person;
-    some_person = (person_t *) malloc(sizeof(some_person));
 
     for (i = 0; i < num_of_hospitals; i++) {
         some_person = hosp[i].first;
@@ -228,7 +227,7 @@ int free_memory(hospital_t *hosp, int num_of_hospitals)
     return 0;
 }
 
-int print_patients(hospital_t *hosp, int num_of_hospitals) 
+int print_patients(hospital_t *hosp, int num_of_hospitals)
 {
     int i;
     person_t *some_person;

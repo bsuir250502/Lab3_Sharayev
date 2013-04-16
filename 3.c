@@ -36,7 +36,7 @@ int place_patient_to_the_hospital(hospital_t *, person_t *);
 int free_hospital_beds(hospital_t *, int);
 int find_better_hospital(hospital_t *, person_t *, int);
 int discharge_patient(hospital_t *);
-int print_patients(hospital_t *, int);
+int print_information_of_hospitals(hospital_t *, int);
 int free_memory(hospital_t *, int);
 
 int main(int argc, char **argv)
@@ -50,6 +50,10 @@ int main(int argc, char **argv)
     }
 
     hosp = read_information_for_hospitals(&num_of_hospitals);
+    printf("Do you want to see the information of hospitals?");
+    if(confirm_choice()) {
+        print_information_of_hospitals(hosp, num_of_hospitals);
+    }  
     while (!(add_patient(hosp, num_of_hospitals)) );
 
     free_memory(hosp, num_of_hospitals);
@@ -59,10 +63,12 @@ int main(int argc, char **argv)
 hospital_t *read_information_for_hospitals(int *num_of_hospitals)
 {
     int i;
+    char input_buffer[128], *endptr;
+    FILE *fp = fopen("Input.in", "r");
     hospital_t *hosp;
 
-    printf("Specify number of hospitals: ");
-    *num_of_hospitals = input_number_in_range(1, MAX_NUM_OF_HOSPITALS);
+    fgets(input_buffer, SIZE(input_buffer), fp);
+    *num_of_hospitals = strtol(input_buffer, &endptr, 10);
     hosp = (hospital_t *) malloc(*num_of_hospitals * sizeof(*hosp));
     if (!hosp) {
         printf("Memory isn't allocated");
@@ -70,19 +76,19 @@ hospital_t *read_information_for_hospitals(int *num_of_hospitals)
     }
 
     for (i = 0; i < *num_of_hospitals; i++) {
-        printf("Specify number of beds for the %d hospital: ", i + 1);
-        hosp[i].num_of_beds = input_number_in_range(1, MAX_NUM_OF_BEDS);
+        fgets(input_buffer,SIZE(input_buffer),fp);
+        hosp[i].num_of_beds = strtol(input_buffer, &endptr, 10);
         hosp[i].num_of_empty_beds = hosp[i].num_of_beds;
-        printf("Specify coordinates:\n x = ");
-        hosp[i].coord.x = input_number_in_range(0, 180);
-        printf(" y = ");
-        hosp[i].coord.y = input_number_in_range(0, 180);
+        fgets(input_buffer,SIZE(input_buffer),fp);
+        hosp[i].coord.x = strtol(input_buffer, &endptr, 10);
+        hosp[i].coord.y = strtol(endptr, &endptr, 10);
         hosp[i].dist = calculate_distance;
         hosp[i].first = NULL;
         hosp[i].last = NULL;
 
     }
 
+    fclose(fp);
     return hosp;
 }
 
@@ -220,17 +226,24 @@ int free_memory(hospital_t *hosp, int num_of_hospitals)
     return 0;
 }
 
-int print_patients(hospital_t *hosp, int num_of_hospitals)
+int print_information_of_hospitals(hospital_t *hosp, int num_of_hospitals)
 {
     int i;
     person_t *some_person;
 
     for (i = 0; i < num_of_hospitals; i++) {
-        printf("List of patents of the %d hospital:\n", i + 1);
-        some_person = hosp[i].first;
-        while (some_person) {
-            puts(some_person->surname);
-            some_person = some_person->next;
+        
+        printf("Information of the %d hospital:\n", i + 1);
+        printf("  Number of beds:  %d\n", hosp[i].num_of_beds);
+        printf("  Number of emty beds:  %d\n", hosp[i].num_of_empty_beds);
+        printf("  Coordinates:  (%ld; %ld)\n", hosp[i].coord.x, hosp[i].coord.y);
+        if(hosp[i].first) {
+            some_person = hosp[i].first;
+            printf("  List of patents:\n");
+            while (some_person) {
+                printf("    %s\n",some_person->surname);
+                some_person = some_person->next;
+            }
         }
     }
 

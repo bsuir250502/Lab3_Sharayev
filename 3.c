@@ -35,7 +35,7 @@ int add_patient(hospital_t *, int);
 int place_patient_to_the_hospital(hospital_t *, person_t *);
 int find_patient(hospital_t *, char *, int);
 int find_better_hospital(hospital_t *, person_t *, int);
-int discharge_patient(person_t *);
+int discharge_patient(hospital_t *, person_t *);
 int print_patients(hospital_t *, int);
 int free_memory(hospital_t *, int);
 
@@ -143,7 +143,7 @@ int find_patient(hospital_t * hosp, char *surname, int num_of_hospitals)
                        surname, i + 1);
                 if (confirm_choice()) {
                     printf("Deleting...\n");
-                    discharge_patient(some_person);
+                    discharge_patient(hosp ,some_person);
                 }
                 return 1;
             }
@@ -155,14 +155,15 @@ int find_patient(hospital_t * hosp, char *surname, int num_of_hospitals)
     return 0;
 }
 
-int discharge_patient(person_t * patient)
+int discharge_patient(hospital_t *hosp , person_t * patient)
 {
     person_t *tmp;
 
     tmp = patient->next;
     patient = patient->next;
-
+    if(hosp->last->next) {
     free(tmp);
+    }
     return 0;
 }
 
@@ -220,7 +221,7 @@ int free_memory(hospital_t *hosp, int num_of_hospitals)
     for (i = 0; i < num_of_hospitals; i++) {
         some_person = hosp[i].first;
         while (some_person) {
-        discharge_patient(some_person);
+        discharge_patient(hosp, some_person);
         }
     }
 

@@ -33,9 +33,9 @@ hospital_t *read_information_for_hospitals(int *);
 char read_argument(int, char **);
 int add_patient(hospital_t *, int);
 int place_patient_to_the_hospital(hospital_t *, person_t *);
-int find_patient(hospital_t *, char *, int);
+int free_hospital_beds(hospital_t *, int);
 int find_better_hospital(hospital_t *, person_t *, int);
-int discharge_patient(hospital_t *, person_t *);
+int discharge_patient(hospital_t *);
 int print_patients(hospital_t *, int);
 int free_memory(hospital_t *, int);
 
@@ -103,23 +103,20 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
         exit(1);
     }
     
-    if (find_patient(hosp, input_buffer, num_of_hospitals)) {
-        printf("Enter another surname\n");
-        return 0;
-    }
     patient->next = NULL;
 
     strncpy(patient->surname, input_buffer, 16);
-    printf("His coordinates(x,y): \n");
+    printf("His coordinates:\n x = ");
     patient->coord.x = input_number_in_range(0, 180);
+    printf(" y = ");
     patient->coord.y = input_number_in_range(0, 180);
 
     better_hosp_num = find_better_hospital(hosp, patient, num_of_hospitals);
     if (!better_hosp_num) {
         printf
-            ("There is no places in hospitals, do you want to see the list of patients to specify someone to out of the hospital?");
+            ("There is no places in hospitals, do you want to free some of it?\n");
             if(confirm_choice()) {
-                print_patients(hosp, num_of_hospitals);
+                free_hospital_beds(hosp, num_of_hospitals);
             }
         return 0;
     }
@@ -129,40 +126,36 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
     return 0;
 }
 
-int find_patient(hospital_t * hosp, char *surname, int num_of_hospitals)
+int free_hospital_beds(hospital_t * hosp, int num_of_hospitals)
 {
     int i;
-    person_t *some_person;
 
     for (i = 0; i < num_of_hospitals; i++) {
-        some_person = hosp[i].first;
-        while (some_person) {
-            if (!(strcmp(some_person->surname, surname)) ) {
-                printf("Do you want to delete %s from the %d hospital?\n",
-                       surname, i + 1);
-                if (confirm_choice()) {
-                    printf("Deleting...\n");
-                    discharge_patient(hosp ,some_person);
-                }
-                return 1;
+        while (hosp[i].first) {
+            printf("Do you want to delete %s from the %d hospital?\n",
+                       hosp->first->surname, i + 1);
+            if (!(confirm_choice()) ) {
+                break; 
             }
-            some_person = some_person->next;
+            printf("Deleting...\n");
+            discharge_patient(&hosp[i]);
         }
     }
 
-    free(some_person);
     return 0;
 }
 
-int discharge_patient(hospital_t *hosp , person_t * patient)
+int discharge_patient(hospital_t *hosp)
 {
     person_t *tmp;
 
-    tmp = patient->next;
-    patient = patient->next;
-    if(hosp->last->next) {
-    free(tmp);
+    if(!hosp->first) {
+        return 1;
     }
+    tmp = hosp->first->next;
+    free(hosp->first);
+    hosp->first = tmp;
+    
     return 0;
 }
 
@@ -170,7 +163,7 @@ int find_better_hospital(hospital_t * hosp, person_t * patient, int num_of_hospi
 {
     int i, better_hosp_num = 0;
     for (i = 0; i < num_of_hospitals; i++) {
-        if ((hosp[i].num_of_beds > hosp[i].num_of_empty_beds) ||
+        if ((hosp[i].num_of_empty_beds > 0) ||
             (hosp[i].dist(hosp[i].coord, patient->coord) <
              hosp[better_hosp_num].dist(hosp[better_hosp_num].coord,
                                         patient->coord)) ) {
@@ -214,13 +207,9 @@ long int calculate_distance(coordinate_t a, coordinate_t b)
 int free_memory(hospital_t *hosp, int num_of_hospitals)
 {
     int i;
-    person_t *some_person;
 
     for (i = 0; i < num_of_hospitals; i++) {
-        some_person = hosp[i].first;
-        while (some_person) {
-        discharge_patient(hosp, some_person);
-        }
+        while (!(discharge_patient(&hosp[i])) );
     }
 
     free(hosp);

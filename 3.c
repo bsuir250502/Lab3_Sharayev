@@ -117,8 +117,11 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
             ("There is no places in hospitals, do you want to free some of it?\n");
             if(confirm_choice()) {
                 free_hospital_beds(hosp, num_of_hospitals);
+                free(patient);
+                return 0;
             }
-        return 0;
+        printf("Shutdown\n");
+        return 1;
     }
     place_patient_to_the_hospital(&hosp[better_hosp_num - 1], patient);
     hosp[better_hosp_num - 1].num_of_empty_beds--;
@@ -139,6 +142,7 @@ int free_hospital_beds(hospital_t * hosp, int num_of_hospitals)
             }
             printf("Deleting...\n");
             discharge_patient(&hosp[i]);
+            hosp[i].num_of_empty_beds++;
         }
     }
 
@@ -165,11 +169,11 @@ int find_better_hospital(hospital_t * hosp, person_t * patient, int num_of_hospi
     for (i = 0; i < num_of_hospitals; i++) {
         if ((hosp[i].num_of_empty_beds > 0) ||
             (hosp[i].dist(hosp[i].coord, patient->coord) <
-             hosp[better_hosp_num].dist(hosp[better_hosp_num].coord,
-                                        patient->coord)) ) {
+             hosp[better_hosp_num].dist(hosp[better_hosp_num].coord, patient->coord)) ) {
             better_hosp_num = i + 1;
         }
     }
+
     return better_hosp_num;
 }
 

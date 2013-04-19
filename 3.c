@@ -55,6 +55,7 @@ int main(int argc, char **argv)
         print_information_of_hospitals(hosp, num_of_hospitals);
     }  
     while (!(add_patient(hosp, num_of_hospitals)) );
+    print_information_of_hospitals(hosp, num_of_hospitals);
 
     free_memory(hosp, num_of_hospitals);
     return 0;
@@ -142,7 +143,7 @@ int free_hospital_beds(hospital_t * hosp, int num_of_hospitals)
     for (i = 0; i < num_of_hospitals; i++) {
         while (hosp[i].first) {
             printf("Do you want to delete %s from the %d hospital?\n",
-                       hosp->first->surname, i + 1);
+                       hosp[i].first->surname, i + 1);
             if (!(confirm_choice()) ) {
                 break; 
             }

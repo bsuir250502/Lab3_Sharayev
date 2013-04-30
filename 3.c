@@ -54,7 +54,7 @@ int main(int argc, char **argv)
     if(confirm_choice()) {
         print_information_of_hospitals(hosp, num_of_hospitals);
     }  
-    while (!(add_patient(hosp, num_of_hospitals)) );
+    while (add_patient(hosp, num_of_hospitals));
     print_information_of_hospitals(hosp, num_of_hospitals);
 
     free_memory(hosp, num_of_hospitals);
@@ -103,7 +103,7 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
     myfgets(input_buffer, 16);
     if (!(strcmp(input_buffer, "end"))) {
         printf("Shutdown\n");
-        return 1;
+        return 0;
     }
     if (!(patient = (person_t *) malloc(sizeof(*patient)) )) {
         printf("Memory isn't allocated");
@@ -125,15 +125,15 @@ int add_patient(hospital_t * hosp, int num_of_hospitals)
             if(confirm_choice()) {
                 free_hospital_beds(hosp, num_of_hospitals);
                 free(patient);
-                return 0;
+                return 1;
             }
         printf("Shutdown\n");
-        return 1;
+        return 0;
     }
     place_patient_to_the_hospital(&hosp[better_hosp_num - 1], patient);
     hosp[better_hosp_num - 1].num_of_empty_beds--;
 
-    return 0;
+    return 1;
 }
 
 int free_hospital_beds(hospital_t * hosp, int num_of_hospitals)

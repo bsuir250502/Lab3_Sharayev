@@ -172,16 +172,20 @@ int discharge_patient(hospital_t *hosp)
 
 int find_better_hospital(hospital_t * hosp, person_t * patient, int num_of_hospitals)
 {
-    int i, better_hosp_num = 0;
+    int i, better_hosp_num = 0, FLAG = 0;
     for (i = 0; i < num_of_hospitals; i++) {
-        if ((hosp[i].num_of_empty_beds > 0) ||
-            (hosp[i].dist(hosp[i].coord, patient->coord) <
+        if ((hosp[i].num_of_empty_beds > 0) &&
+            (hosp[i].dist(hosp[i].coord, patient->coord) <=
              hosp[better_hosp_num].dist(hosp[better_hosp_num].coord, patient->coord)) ) {
-            better_hosp_num = i + 1;
+            better_hosp_num = i;
+            FLAG = 1;
         }
     }
+    if(!FLAG) {
+        return 0;
+    }
 
-    return better_hosp_num;
+    return better_hosp_num + 1;
 }
 
 int place_patient_to_the_hospital(hospital_t * hospital, person_t * patient)
